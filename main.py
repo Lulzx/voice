@@ -20,7 +20,7 @@ def handle(msg):
 		os.system("ffmpeg -ss 60 -t 60 -y -i " + bot.getFile(file_id=fileid)['file_path'] + " -acodec libvorbis output.ogg")
 		sendVoice(chat_id, "output.ogg")
 	if msg["text"] == "/start":
-		bot.sendMessage(chat_id,"Hello, please send me an MP3 file and I'll generate a preview")
+		bot.sendMessage(chat_id,"Hello, please send me a MP3 file and I'll generate a preview")
 
 def sendVoice(chat_id,file_name):
 	url = "https://api.telegram.org/bot%s/sendVoice"%(TOKEN)
