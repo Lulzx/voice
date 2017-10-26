@@ -1,6 +1,6 @@
 # tg-voicebot
 
-Currently in developement. Check back later again :)
+A spicy MP3 to voice message converter bot for Telegram :)
 
 [koyu.space](https://koyu.space)
 
