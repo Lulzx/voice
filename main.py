@@ -3,6 +3,7 @@ import requests
 import os
 import time
 import urllib2
+from mutagen.mp3 import MP3
 
 TOKEN = ""
 
@@ -17,7 +18,9 @@ def handle(msg):
 		print(fileid)
 		print(bot.getFile(file_id=fileid))
 		os.system("wget https://api.telegram.org/file/bot" + TOKEN + "/" + bot.getFile(file_id=fileid)['file_path'] + " -O " + bot.getFile(file_id=fileid)['file_path'])
-		os.system("ffmpeg -ss 60 -t 60 -y -i " + bot.getFile(file_id=fileid)['file_path'] + " -strict -2 -ac 1 -map 0:a -codec:a opus -b:a 128k -vbr off -ar 24000 output.ogg")
+		audio = MP3(bot.getFile(file_id=fileid)['file_path'])
+		length = audio.info.length * 0.33
+		os.system("ffmpeg -ss " + str(length) + " -t 60 -y -i " + bot.getFile(file_id=fileid)['file_path'] + " -strict -2 -ac 1 -map 0:a -codec:a opus -b:a 128k -vbr off output.ogg")
 		sendVoice(chat_id, "output.ogg")
 	if msg["text"] == "/start":
 		bot.sendMessage(chat_id,"Hello, please send me a MP3 file and I'll generate a preview")
