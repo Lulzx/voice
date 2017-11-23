@@ -20,7 +20,11 @@ def handle(msg):
 		os.system("wget https://api.telegram.org/file/bot" + TOKEN + "/" + bot.getFile(file_id=fileid)['file_path'] + " -O " + bot.getFile(file_id=fileid)['file_path'])
 		audio = MP3(bot.getFile(file_id=fileid)['file_path'])
 		length = audio.info.length * 0.33
-		os.system("ffmpeg -ss " + str(length) + " -t 60 -y -i " + bot.getFile(file_id=fileid)['file_path'] + " -strict -2 -ac 1 -map 0:a -codec:a opus -b:a 128k -vbr off output.ogg")
+		l2 = (audio.info.length * 0.33) + 60
+		if audio.info.length > l2:
+			os.system("ffmpeg -ss " + str(length) + " -t 60 -y -i " + bot.getFile(file_id=fileid)['file_path'] + " -strict -2 -ac 1 -map 0:a -codec:a opus -b:a 128k -vbr off output.ogg")
+		else:
+			os.system("ffmpeg -ss 0 -t 60 -y -i " + bot.getFile(file_id=fileid)['file_path'] + " -strict -2 -ac 1 -map 0:a -codec:a opus -b:a 128k -vbr off output.ogg")
 		sendVoice(chat_id, "output.ogg")
 	if msg["text"] == "/start":
 		bot.sendMessage(chat_id,"Hello, please send me a MP3 file and I'll generate a preview")
