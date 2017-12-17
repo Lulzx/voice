@@ -13,8 +13,8 @@ A spicy MP3 to voice message converter bot for Telegram :)
 Then
 
 ```
-git clone https://github.com/koyuawsmbrtn/tg-voicebot.git
-cd tg-voicebot
+git clone https://github.com/botschmiede/voice tgvoice
+cd tgvoice
 sudo pip install -r requirements.txt
 ```
 
