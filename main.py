@@ -4,30 +4,33 @@ import os
 import time
 import urllib2
 from mutagen.mp3 import MP3
+from mutagen.mp4 import MP4
 
 TOKEN = ""
 
 def handle(msg):
-	content_type, chat_type, chat_id = telepot.glance(msg)
+	content_type, chat_id = telepot.glance(msg)
 	if content_type == 'audio':
 		audiofile = msg['audio']
-		fileid = msg['audio']['file_id']
+		fileid = audiofile['file_id']
 		flavor = telepot.flavor(msg)
 		summary = telepot.glance(msg, flavor=flavor)
 		print(flavor, summary)
 		print(fileid)
 		print(bot.getFile(file_id=fileid))
-		os.system("wget https://api.telegram.org/file/bot" + TOKEN + "/" + bot.getFile(file_id=fileid)['file_path'] + " -O " + bot.getFile(file_id=fileid)['file_path'])
-		audio = MP3(bot.getFile(file_id=fileid)['file_path'])
-		length = audio.info.length * 0.33
-		l2 = (audio.info.length * 0.33) + 60
+		filename = bot.getFile(file_id=fileid)['file_path']
+		os.system("wget https://api.telegram.org/file/bot" + TOKEN + "/" + filename + " -O " + filename)
+		if ".mp3" in filename:
+			audio = MP3(filename)
+			length = audio.info.length * 0.33
+		if ".m4a" in filename:
+			audio = MP4(filename)
+			length = audio.info.length * 0.33
 		if audio.info.length > l2:
-			os.system("ffmpeg -ss " + str(length) + " -t 60 -y -i " + bot.getFile(file_id=fileid)['file_path'] + " -strict -2 -ac 1 -map 0:a -codec:a opus -b:a 128k -vbr off output.ogg")
+			os.system("ffmpeg -ss " + str(length) + " -t 60 -y -i " + filename + " -strict -2 -ac 1 -map 0:a -codec:a opus -b:a 128k -vn output.ogg")
 		else:
-			os.system("ffmpeg -ss 0 -t 60 -y -i " + bot.getFile(file_id=fileid)['file_path'] + " -strict -2 -ac 1 -map 0:a -codec:a opus -b:a 128k -vbr off output.ogg")
+			os.system("ffmpeg -ss 0 -t 60 -y -i " + filename + " -strict -2 -ac 1 -map 0:a -codec:a opus -b:a 128k -vn output.ogg")
 		sendVoice(chat_id, "output.ogg")
-	if msg["text"] == "/start":
-		bot.sendMessage(chat_id,"Hello, please send me a MP3 file and I'll generate a preview")
 
 def sendVoice(chat_id,file_name):
 	url = "https://api.telegram.org/bot%s/sendVoice"%(TOKEN)
