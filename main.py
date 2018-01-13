@@ -23,9 +23,11 @@ def handle(msg):
 		if ".mp3" in filename:
 			audio = MP3(filename)
 			length = audio.info.length * 0.33
+			l2 = (audio.info.length * 0.33) + 60
 		if ".m4a" in filename:
 			audio = MP4(filename)
 			length = audio.info.length * 0.33
+			l2 = (audio.info.length * 0.33) + 60
 		if audio.info.length > l2:
 			os.system("ffmpeg -ss " + str(length) + " -t 60 -y -i " + filename + " -strict -2 -ac 1 -map 0:a -codec:a opus -b:a 128k -vn output.ogg")
 		else:
