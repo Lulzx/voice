@@ -9,7 +9,7 @@ from mutagen.mp4 import MP4
 TOKEN = ""
 
 def handle(msg):
-	content_type, chat_id = telepot.glance(msg)
+	content_type, chat_type, chat_id = telepot.glance(msg)
 	if content_type == 'audio':
 		audiofile = msg['audio']
 		fileid = audiofile['file_id']
